@@ -1,0 +1,39 @@
+{% extends "game/base.html" %}
+{% block content %}
+<div class="game-container">
+    <h2 class="text-center">Guess the 5-Letter Word</h2>
+    <div class="board">
+    {% for guess in guesses_with_feedback %}
+        <div class="board-row">
+            {% for letter, color in guess %}
+                <div class="letter {{ color }}">{{ letter }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+
+    {% for i in remaining_guesses_range %}
+        <div class="board-row">
+            <div class="letter"></div>
+            <div class="letter"></div>
+            <div class="letter"></div>
+            <div class="letter"></div>
+            <div class="letter"></div>
+        </div>
+    {% endfor %}
+  </div>
+
+    {% if not game_session.is_finished %}
+        <form method="POST" class="mt-4">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <input type="text" name="guess" class="form-control" placeholder="Enter your 5-letter guess" maxlength="5" required autofocus oninput="this.value = this.value.toUpperCase()">
+                <button class="btn btn-outline-primary" type="submit">Guess</button>
+            </div>
+        </form>
+    {% else %}
+        <div class="text-center mt-4">
+            <a href="{% url 'start-game' %}" class="btn btn-success btn-lg">Play Again</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock content %}
